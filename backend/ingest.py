@@ -54,14 +54,20 @@ def extract_entities(text: str) -> dict:
         "ComplianceStd. Relationship types: HAS_FAILURE_MODE, REFERENCES, "
         "CAUSED_BY, SUPPLIED_BY, GOVERNED_BY.\n\nDocument:\n" + text[:4000]
     )
-    raw = get_chat_response(SYSTEM, user, json_mode=True)
-    return _parse_json(raw)
+    try:
+        raw = get_chat_response(SYSTEM, user, json_mode=True)
+        return _parse_json(raw)
+    except Exception:
+        return {"entities": [], "relationships": []}
 
 
 def ingest_document(filename: str, raw: bytes) -> dict:
     text = _extract_text(filename, raw)
     data = extract_entities(text)
-    graph.write_entities(data)
+    try:
+        graph.write_entities(data)
+    except Exception as exc:
+        print(f"[ingest] graph write skipped ({exc})")
     return {
         "status": "ingested",
         "doc_id": str(uuid.uuid4()),

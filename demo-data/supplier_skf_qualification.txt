@@ -1,0 +1,21 @@
+﻿Supplier Qualification Record: SKF Industrial Bearings
+Document ID: SQR-SKF-001
+Date: 2024-04-01
+Procurement category: Rotating equipment bearings
+
+Approved parts supplied to plant
+- Part #6309 Deep Groove Ball Bearing (Pump-01, Motor-05 applications)
+- Part #6312 Deep Groove Ball Bearing (Compressor-03 application)
+
+Quality incidents on record
+- 2024-08-22: Premature bearing failure on Pump-01 (part #6309, 6 months in service)
+- 2024-12-10: Repeat bearing failure on Pump-01 (part #6309, 4 months post-replacement)
+- 2025-02-03: Bearing failure on Compressor-03 (part #6312)
+- 2025-03-10: Bearing failure on Motor-05 (part #6309)
+
+Qualification status: ACTIVE — under review
+Review trigger: Four failures within 12 months. Engineering to assess whether
+batch contamination or incorrect specification is the root cause.
+
+Responsible engineer: Reliability Team Lead
+Next review date: 2025-07-01

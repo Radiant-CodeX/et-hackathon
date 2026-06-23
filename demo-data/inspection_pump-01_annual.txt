@@ -1,0 +1,26 @@
+﻿Inspection Report: Pump-01 Annual Inspection
+Document ID: INSP-2024-008
+Inspector: Plant Reliability Engineer
+Date: 2024-07-10
+
+Asset: Pump-01
+Location: Bay 3, Cooling Water System
+
+Inspection scope
+Full strip-down inspection per PESO Pressure Vessel Rules and OEM manual.
+
+Findings
+1. Impeller: minor erosion on leading edge; within acceptable limits. No action.
+2. Mechanical seal: slight wear; replaced as precaution (Flowserve FLO-MS-11).
+3. Bearing housing: fretting corrosion visible on DE bearing seat — significant.
+   Previous bearing replacement appears to have used an undersized fit.
+4. Shaft: within tolerance. No straightness deviation detected.
+
+Recommendations
+- Bearing housing to be re-bored to correct tolerance before next bearing fit.
+- Confirm whether SKF #6309 is the correct bearing specification for this application
+  (OEM manual specifies #6308; discrepancy requires engineering review).
+- Schedule follow-up inspection in 6 months.
+
+Compliance: PESO certificate renewed. Factory Act inspection log updated.
+Related equipment: Motor-05 (coupled drive unit)

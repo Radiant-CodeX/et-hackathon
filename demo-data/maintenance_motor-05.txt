@@ -1,0 +1,19 @@
+﻿Maintenance Log: Motor-05
+Location: Pump House, Bay 4
+Asset class: Induction motor (drive unit for Pump-01)
+
+Record 1
+Date: 2025-03-10 | Type: Corrective
+Issue: Motor tripped on overload; vibration alarm triggered
+Root cause: Bearing wear, DE bearing
+Resolution: DE bearing replaced (Supplier: SKF, part #6309)
+Cost: Rs 4,800
+Note: Fourth SKF part #6309 bearing failure across plant. Pump-01 uses the same part.
+
+Record 2
+Date: 2024-09-14 | Type: Preventive | Duration: 1.5h
+Work: Winding insulation check, bearing lubrication
+Findings: Insulation resistance within limits; bearing temperature elevated but acceptable
+
+Governing procedure: Electrical Isolation Procedure (EIP-001)
+Compliance standard: Factory Act - Electrical Safety Schedule
