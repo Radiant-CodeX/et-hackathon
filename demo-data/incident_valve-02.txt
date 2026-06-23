@@ -1,0 +1,26 @@
+﻿Incident Report: Valve-02 Seal Leak
+Document ID: INC-2025-003
+Date: 2025-01-05
+Reported by: Operations Shift Supervisor
+
+Asset: Valve-02
+Location: Feed Line, Unit 1
+Incident type: Process fluid leak
+
+Description
+A seal failure on Valve-02 resulted in a minor release of process fluid to the bund.
+The asset was isolated and handed to maintenance within 30 minutes of detection.
+
+Root cause analysis
+Visual inspection confirmed degraded gland packing material. Seal sourced from
+Flowserve; part reference FLO-GP-22. Packing had not been inspected at the
+last preventive cycle (SOP-011 step 4 was skipped due to resource constraints).
+
+Actions taken
+1. Gland packing replaced (Flowserve FLO-GP-22).
+2. Corrective action raised to update SOP-011 sign-off checklist.
+3. Environmental authority notified per Factory Act Sec 36.
+
+Related equipment: Heat Exchanger HE-01 (same feed line)
+Governing procedure: SOP-011 (Cooling System Inspection)
+Compliance flag: Factory Act Sec 36 - incident reporting obligation met.

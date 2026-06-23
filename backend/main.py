@@ -5,6 +5,8 @@ Implements every route in the Section 5 API contract. Graph and agent
 calls degrade gracefully so the app boots even before Neo4j or Azure
 are wired.
 """
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,7 +19,21 @@ from models import (
     AgentRequest, AgentResponse, AgentResult,
 )
 
-app = FastAPI(title="Industrial Knowledge Intelligence", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        graph.init_schema()
+    except Exception as e:
+        print(f"[startup] Neo4j not ready ({e}); continuing.")
+    yield
+
+
+app = FastAPI(
+    title="Industrial Knowledge Intelligence",
+    version="0.1.0",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,14 +42,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def _startup():
-    try:
-        graph.init_schema()
-    except Exception as e:
-        print(f"[startup] Neo4j not ready ({e}); continuing.")
 
 
 @app.get("/health")

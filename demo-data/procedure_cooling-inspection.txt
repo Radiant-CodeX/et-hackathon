@@ -1,0 +1,19 @@
+﻿Procedure: Cooling System Inspection
+Document ID: SOP-011
+Revision: 2
+Governed by: PESO Pressure Vessel Rules 2023
+
+Purpose
+Define the routine inspection steps for all cooling-water-loop assets:
+Heat Exchanger HE-01, Pump-01, and associated valves.
+
+Steps
+1. Isolate cooling water supply and confirm zero pressure.
+2. Drain and visually inspect tube bundle for fouling or corrosion.
+3. Record shell pressure rating against PESO certification.
+4. Inspect gland packing on all valves in the loop (including Valve-02).
+5. Restore cooling water supply; confirm no leaks.
+6. File completed checklist in the plant document management system.
+
+Equipment in scope: Heat Exchanger HE-01, Pump-01, Valve-02
+Related compliance: PESO-2023 (annual inspection certificate required)
