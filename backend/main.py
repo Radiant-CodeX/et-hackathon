@@ -88,7 +88,12 @@ def search_route(q: str):
 
 @app.post("/agents/run", response_model=AgentResponse)
 def agents_route(req: AgentRequest):
-    detail = graph.equipment_context(req.entity_id)
+    try:
+        detail = graph.equipment_context(req.entity_id)
+    except Exception as e:
+        # Graceful fallback when Neo4j unavailable
+        detail = {"entity": {"id": req.entity_id}, "backlinks": [], "related": []}
+
     dispatch = {
         "rca": agents.run_rca,
         "compliance": agents.check_compliance,
@@ -97,7 +102,12 @@ def agents_route(req: AgentRequest):
     fn = dispatch.get(req.agent_type)
     if not fn:
         raise HTTPException(status_code=400, detail="Unknown agent_type")
-    result = fn(req.entity_id, detail)
+
+    try:
+        result = fn(req.entity_id, detail)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")
+
     return {
         "agent_type": req.agent_type,
         "entity_id": req.entity_id,
