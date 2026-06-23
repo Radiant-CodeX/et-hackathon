@@ -1,5 +1,8 @@
 """Central configuration. All env vars are read here, once."""
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- Neo4j ---
 NEO4J_URI = os.environ.get("NEO4J_URI", "neo4j://neo4j:7687")

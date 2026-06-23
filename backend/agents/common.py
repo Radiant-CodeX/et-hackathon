@@ -21,11 +21,28 @@ def parse_json(text: str) -> dict:
         return {}
 
 
-def run_llm(prompt: str) -> dict:
-    """Invoke the shared model and parse a JSON result, or stub it."""
+def run_llm(prompt: str, agent_name: str = "Agent") -> dict:
+    """Invoke the shared model and parse a JSON result, or stub it.
+
+    Args:
+        prompt: The prompt to send to the LLM
+        agent_name: Name of the agent for LangSmith tracing
+    """
     if config.USE_STUBS or llm is None:
         return {}
-    resp = llm.invoke(prompt)
+
+    # Add tags for LangSmith to identify the agent
+    try:
+        # Use LangChain's tag_chain to add metadata
+        tagged_llm = llm.with_config(
+            tags=[agent_name, "agentic-intelligence"],
+            metadata={"agent": agent_name}
+        )
+        resp = tagged_llm.invoke(prompt)
+    except Exception:
+        # Fallback if tagging fails
+        resp = llm.invoke(prompt)
+
     return parse_json(resp.content)
 
 
