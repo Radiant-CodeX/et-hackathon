@@ -1,0 +1,26 @@
+Maintenance Log: Pump-01
+Location: Bay 3, Cooling Water System
+Asset class: Centrifugal pump
+
+Record 1
+Date: 2025-01-15 | Type: Preventive | Duration: 2h
+Work: Seal replacement, impeller inspection
+Issues found: Minor cavitation marks on impeller
+Next review: 2025-04-15
+
+Record 2
+Date: 2024-12-10 | Type: Corrective
+Issue: Abnormal vibration, 3.2mm lateral displacement
+Root cause: Bearing wear
+Resolution: Bearing replaced (Supplier: SKF, part #6309)
+Cost: Rs 5,200
+
+Record 3
+Date: 2024-08-22 | Type: Corrective
+Issue: Overheating at drive end
+Root cause: Bearing wear, premature
+Resolution: Bearing replaced (Supplier: SKF, part #6309)
+Cost: Rs 5,400
+Note: Second bearing failure within six months.
+
+Governing procedure: Hot Work Permit Procedure (HWP-002)

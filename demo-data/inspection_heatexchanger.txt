@@ -1,0 +1,20 @@
+Inspection Report: Heat-Exchanger-A2
+Document ID: INSP-2025-014
+Inspector: Quarterly Reliability Team
+Date: 2025-01-28
+
+Asset: Heat-Exchanger-A2
+Location: Process Area, Unit 1
+
+Findings
+- Tube bundle: minor fouling, within acceptable limits.
+- Shell pressure rating: compliant with PESO certification.
+- Gasket condition: satisfactory.
+- Supplier of replacement gaskets: Flexitallic.
+
+Recommendations
+- Schedule descaling at next planned shutdown.
+- Verify PESO annual inspection certificate is current.
+
+Governing standard: PESO Pressure Vessel Rules
+Related equipment: Pump-01 (shares cooling water loop)
