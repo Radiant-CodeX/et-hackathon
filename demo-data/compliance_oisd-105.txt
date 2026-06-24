@@ -1,0 +1,12 @@
+Compliance Reference: OISD-105 Work Permit System (Excerpt)
+Authority: Oil Industry Safety Directorate
+
+Key requirements for hot work permits:
+1. A documented hazard identification must precede permit issue.
+2. Gas testing must be performed and recorded before and during hot work.
+3. A competent person must authorise the permit.
+4. Manager sign-off is required prior to commencement in high-risk areas.
+5. Permits must be closed and filed on completion.
+
+Related procedures: Hot Work Permit Procedure (HWP-002)
+Applicable areas: all process units handling hydrocarbons.

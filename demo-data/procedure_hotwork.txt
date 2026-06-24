@@ -1,0 +1,20 @@
+Procedure: Hot Work Permit Procedure
+Document ID: HWP-002
+Revision: 3
+Governed by: OISD-105 (Work Permit System)
+
+Purpose
+This procedure governs the issue of hot work permits for welding, cutting,
+and grinding activities in process areas.
+
+Steps
+1. Requestor completes the hot work permit form.
+2. Area is inspected for flammable materials and gas accumulation.
+3. Gas test is performed and recorded.
+4. Fire watch is assigned for the duration of the work.
+5. Work proceeds; permit is closed on completion.
+
+Equipment in scope: Pump-01, Heat-Exchanger-A2
+
+Note: This revision does not include a manager sign-off checkpoint prior to
+commencement of hot work.

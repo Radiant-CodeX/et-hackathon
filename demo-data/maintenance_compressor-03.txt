@@ -1,0 +1,18 @@
+Maintenance Log: Compressor-03
+Location: Compressor House, Unit 2
+Asset class: Reciprocating compressor
+
+Record 1
+Date: 2025-02-03 | Type: Corrective
+Issue: Excessive vibration on crankshaft bearing
+Root cause: Bearing wear
+Resolution: Bearing replaced (Supplier: SKF, part #6312)
+Cost: Rs 8,900
+Note: Third SKF bearing failure across the plant this quarter.
+
+Record 2
+Date: 2024-11-18 | Type: Preventive | Duration: 4h
+Work: Valve inspection, lubrication system check
+Issues found: None significant
+
+Governing procedure: Confined Space Entry Procedure (CSE-004)
