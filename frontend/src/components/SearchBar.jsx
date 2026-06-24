@@ -1,42 +1,31 @@
-import { useState, useEffect } from "react";
-import { search } from "../api/client";
+import { useState } from "react";
+import { Search } from "lucide-react";
 
-export default function SearchBar({ onSelect }) {
-  const [q, setQ] = useState("");
-  const [results, setResults] = useState([]);
+export default function SearchBar({ onSearch }) {
+  const [value, setValue] = useState("");
 
-  useEffect(() => {
-    if (!q.trim()) {
-      setResults([]);
-      return;
-    }
-    const t = setTimeout(() => {
-      search(q).then(setResults).catch(() => setResults([]));
-    }, 250);
-    return () => clearTimeout(t);
-  }, [q]);
+  const submit = (e) => {
+    e.preventDefault();
+    onSearch?.(value.trim());
+  };
 
   return (
-    <div className="search-box">
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search equipment, procedures..."
-      />
-      {results.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          {results.map((r) => (
-            <div
-              key={r.id}
-              className="list-item"
-              onClick={() => onSelect({ id: r.id, label: r.name, type: r.type })}
-            >
-              <span className={`dot type-${r.type}`} />
-              {r.name}
-            </div>
-          ))}
+    <div className="searchbar">
+      <form onSubmit={submit}>
+        <div className="search-input-wrap">
+          <Search size={15} />
+          <input
+            type="text"
+            placeholder="Search equipment, failures, suppliers…"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            aria-label="Search entities"
+          />
         </div>
-      )}
+        <button type="submit" className="btn-search" aria-label="Run search">
+          Search
+        </button>
+      </form>
     </div>
   );
 }

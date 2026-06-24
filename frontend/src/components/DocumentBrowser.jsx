@@ -1,33 +1,51 @@
-import { useEffect, useState } from "react";
-import { getEntities } from "../api/client";
+import { colorFor, TYPE_LABELS } from "./nodeTypes";
+import Loading from "./Loading";
 
-export default function DocumentBrowser({ onSelect, refreshKey }) {
-  const [entities, setEntities] = useState([]);
-  const [loading, setLoading] = useState(true);
+/**
+ * Left-sidebar list. Doubles as the document/entity browser and the
+ * search-results view. When `searchResults` is non-null it shows the
+ * scored results; otherwise it lists all entities.
+ */
+export default function DocumentBrowser({
+  entities = [],
+  searchResults = null,
+  activeId,
+  loading,
+  onSelect,
+}) {
+  if (loading) return <Loading label="Loading entities…" />;
 
-  useEffect(() => {
-    setLoading(true);
-    getEntities()
-      .then(setEntities)
-      .catch(() => setEntities([]))
-      .finally(() => setLoading(false));
-  }, [refreshKey]);
-
-  if (loading) return <div className="loading">Loading entities...</div>;
-  if (entities.length === 0)
-    return <div className="loading">No entities yet.</div>;
+  const showingSearch = searchResults !== null;
+  const items = showingSearch ? searchResults : entities;
 
   return (
-    <div className="list">
-      {entities.map((e) => (
+    <div className="panel-scroll" data-testid="document-browser">
+      <div className="list-section-label">
+        {showingSearch ? `Results · ${items.length}` : "All entities"}
+      </div>
+
+      {items.length === 0 && (
+        <div className="empty-note">
+          {showingSearch ? "No matches found." : "No entities yet."}
+        </div>
+      )}
+
+      {items.map((e) => (
         <div
           key={e.id}
-          className="list-item"
-          onClick={() => onSelect({ id: e.id, label: e.name, type: e.type })}
+          className={`entity-row${e.id === activeId ? " active" : ""}`}
+          onClick={() => onSelect?.(e.id)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(ev) => ev.key === "Enter" && onSelect?.(e.id)}
         >
-          <span className={`dot type-${e.type}`} />
-          <span style={{ flex: 1 }}>{e.name}</span>
-          <span className="badge">{e.type}</span>
+          <span className="type-dot" style={{ background: colorFor(e.type) }} />
+          <span className="name">{e.name}</span>
+          {showingSearch && typeof e.score === "number" ? (
+            <span className="search-score">{e.score.toFixed(2)}</span>
+          ) : (
+            <span className="type-tag">{TYPE_LABELS[e.type] || e.type}</span>
+          )}
         </div>
       ))}
     </div>

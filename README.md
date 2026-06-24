@@ -1,77 +1,73 @@
-# Industrial Knowledge Intelligence Platform
+# Industrial Knowledge Intelligence — Frontend (Person B)
 
-ET AI Hackathon 2026 — Problem Statement #8.
-An AI platform that ingests heterogeneous industrial documents, builds a
-knowledge graph, and runs reasoning agents over it to surface insights no
-single engineer could connect alone.
-
-LangChain is the orchestration framework; Azure AI Foundry is the model
-provider.
+React + Vite + Cytoscape knowledge-graph explorer for the ET AI Hackathon 2026,
+Problem Statement #8. This is the **Person B / Frontend UI** vertical slice.
 
 ## Quick start
 
 ```bash
-cp .env.example .env        # fill in Azure values, or leave USE_STUBS=true
-docker-compose up --build
+cd frontend
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Then open:
-- Frontend: http://localhost:3000
-- API docs: http://localhost:8000/docs
-- Neo4j browser: http://localhost:7474 (neo4j / password)
+The app runs **standalone out of the box** — it ships with realistic demo data
+(`src/api/mockClient.js`) so it works before Person A's backend exists. When the
+FastAPI backend is up at `http://localhost:8000`, every call automatically uses
+it instead (the top-right badge flips from **Demo data** to **Live backend**).
+No code change needed — set `VITE_API_URL` only if the backend is elsewhere.
 
-With `USE_STUBS=true` (default) the whole system runs with no Azure key —
-ingestion and agents return canned responses so every panel works. Flip to
-`false` and fill in Azure values for real AI calls.
+## Tests (TDD)
+
+```bash
+npm test           # run once
+npm run test:watch # watch mode
+```
+
+Covers: dashboard render, three-panel layout, mock API, graph component,
+search bar, entity panel, and agent-result rendering (TDD sections A1–A7).
 
 ## Architecture
 
 ```
-Documents -> Ingestion + Extraction -> Neo4j Graph -> FastAPI -> React UI
-                  (Azure model)                          |
-                                                     Agent layer
-                                                  (RCA / Compliance / Historian)
+src/
+  api/
+    client.js        # axios → backend, with mock fallback
+    mockClient.js    # demo graph + agent responses
+  components/
+    Graph.jsx        # Cytoscape explorer (colour-coded node types)
+    SearchBar.jsx
+    DocumentBrowser.jsx
+    EntityPanel.jsx  # details + backlinks + agent buttons/results
+    AgentButtons.jsx # Run RCA / Check Compliance / Equipment History
+    AgentResult.jsx  # summary + findings + confidence + citations
+    Loading.jsx / ErrorState.jsx
+    nodeTypes.js     # node-type colour map
+  pages/
+    Dashboard.jsx    # three-panel shell, wires everything together
 ```
 
-| Layer            | Tech                          | Owner    |
-|------------------|-------------------------------|----------|
-| Ingestion        | PDFPlumber + Azure (LangChain)| Person A |
-| Knowledge graph  | Neo4j 5                       | Person A |
-| REST API         | FastAPI                       | Person A |
-| Agents           | LangChain + Azure             | Person C |
-| Frontend         | React + Vite + Cytoscape      | Person B |
-| Demo data + Ops  | Docker Compose + pytest       | Person D |
+### Node-type colours
 
-## Repo layout
+| Type        | Colour |
+| ----------- | ------ |
+| Equipment   | Blue   |
+| Procedure   | Purple |
+| FailureMode | Red    |
+| Supplier    | Teal   |
+| Compliance  | Amber  |
 
-```
-backend/        FastAPI app, graph layer, ingestion, agents
-  ai_client.py  single Azure-backed LangChain model (shared)
-  agents/       rca, compliance, historian
-frontend/       React + Cytoscape knowledge explorer
-demo-data/      realistic industrial documents (auto-seeded)
-tests/          end-to-end pytest suite
-docs/           API contract + entity schema
-```
+## API contract consumed (locked §5.2)
 
-## Running tests
+- `GET /graph/relationships`
+- `GET /entities`
+- `GET /entities/{id}`
+- `GET /search?q=`
+- `POST /agents/run`
 
-```bash
-cd backend && pip install -r requirements.txt
-USE_STUBS=true pytest ../tests -v
-```
+## Demo flow
 
-## Local dev without Docker
-
-```bash
-# Backend
-cd backend && pip install -r requirements.txt
-USE_STUBS=true uvicorn main:app --reload
-
-# Frontend (separate terminal)
-cd frontend && npm install && npm run dev
-```
-
-## The API contract
-
-See `docs/api_contract.md`. It is locked — changes need a full-team sync.
+Search **Pump-01** → click the node → graph centres + backlinks load →
+**Run RCA** → it surfaces the bearing-failure pattern shared across three
+machines tied to supplier SKF → **Check Compliance** → flags a missing permit
+sign-off against OISD-118.
