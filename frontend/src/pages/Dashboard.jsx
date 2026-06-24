@@ -1,59 +1,166 @@
-import { useState } from "react";
-import Graph from "../components/Graph.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import DocumentBrowser from "../components/DocumentBrowser.jsx";
-import EntityPanel from "../components/EntityPanel.jsx";
-import { ingest } from "../api/client";
+import { useCallback, useEffect, useState } from "react";
+import { Boxes, Network, PanelRight } from "lucide-react";
+import ikip, { apiState } from "../api/client";
+import SearchBar from "../components/SearchBar";
+import DocumentBrowser from "../components/DocumentBrowser";
+import Graph from "../components/Graph";
+import EntityPanel from "../components/EntityPanel";
+import ErrorState from "../components/ErrorState";
 
 export default function Dashboard() {
-  const [selected, setSelected] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [uploading, setUploading] = useState(false);
+  const [graph, setGraph] = useState({ nodes: [], relationships: [] });
+  const [entities, setEntities] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
 
-  const handleUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
+  const [selectedId, setSelectedId] = useState(null);
+  const [entity, setEntity] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  const [runningAgent, setRunningAgent] = useState(null);
+  const [agentResult, setAgentResult] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mode, setMode] = useState("unknown");
+
+  // Initial load: graph + entity list.
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
-      await ingest(file);
-      setRefreshKey((k) => k + 1);
+      const [g, e] = await Promise.all([ikip.getGraph(), ikip.getEntities()]);
+      setGraph(g);
+      setEntities(e);
+      setMode(apiState.mode);
     } catch (err) {
-      console.error("Upload failed", err);
+      setError("Could not load knowledge graph.");
     } finally {
-      setUploading(false);
-      e.target.value = "";
+      setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadAll();
+  }, [loadAll]);
+
+  // Select an entity → fetch its detail + reset any prior agent output.
+  const selectEntity = useCallback(async (id) => {
+    if (!id) return;
+    setSelectedId(id);
+    setAgentResult(null);
+    setDetailLoading(true);
+    try {
+      const data = await ikip.getEntity(id);
+      setEntity(data.entity);
+      setDetail({ backlinks: data.backlinks, related: data.related });
+      setMode(apiState.mode);
+    } catch (err) {
+      setEntity({ id, name: id, type: "Equipment", metadata: {} });
+      setDetail(null);
+    } finally {
+      setDetailLoading(false);
+    }
+  }, []);
+
+  const handleSearch = useCallback(
+    async (q) => {
+      if (!q) {
+        setSearchResults(null);
+        return;
+      }
+      const results = await ikip.search(q);
+      setSearchResults(results);
+      setMode(apiState.mode);
+    },
+    []
+  );
+
+  const runAgent = useCallback(
+    async (agentType) => {
+      if (!selectedId) return;
+      setRunningAgent(agentType);
+      setAgentResult(null);
+      try {
+        const res = await ikip.runAgent(agentType, selectedId);
+        setAgentResult(res);
+        setMode(apiState.mode);
+      } finally {
+        setRunningAgent(null);
+      }
+    },
+    [selectedId]
+  );
 
   return (
     <div className="app">
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h1>Knowledge Intelligence</h1>
-          <p>Industrial operations brain</p>
+      {/* Top bar */}
+      <header className="topbar">
+        <div className="brand">
+          <div className="brand-mark">
+            <Network size={17} />
+          </div>
+          <div className="brand-text">
+            <h1>Industrial Knowledge Intelligence</h1>
+            <p>Unified Asset &amp; Operations Brain</p>
+          </div>
         </div>
-
-        <div className="upload-bar">
-          <label>
-            {uploading ? "Ingesting..." : "Upload a document"}
-            <input type="file" onChange={handleUpload} disabled={uploading} />
-          </label>
+        <div className="spacer" />
+        <div className={`status-pill ${mode === "live" ? "live" : "mock"}`}>
+          <span className="dot" />
+          {mode === "live" ? "Live backend" : "Demo data"}
         </div>
+      </header>
 
-        <SearchBar onSelect={setSelected} />
-        <DocumentBrowser onSelect={setSelected} refreshKey={refreshKey} />
-      </div>
+      {/* Three-panel workspace */}
+      <div className="workspace">
+        {/* LEFT */}
+        <aside className="panel left" data-testid="left-sidebar">
+          <SearchBar onSearch={handleSearch} />
+          <div className="panel-header">
+            <Boxes size={14} /> Entities
+            <span className="count">{entities.length}</span>
+          </div>
+          {error ? (
+            <ErrorState message={error} onRetry={loadAll} />
+          ) : (
+            <DocumentBrowser
+              entities={entities}
+              searchResults={searchResults}
+              activeId={selectedId}
+              loading={loading}
+              onSelect={selectEntity}
+            />
+          )}
+        </aside>
 
-      <div className="center">
-        <Graph onNodeClick={setSelected} refreshKey={refreshKey} />
-      </div>
+        {/* CENTER */}
+        <main className="panel center" data-testid="graph-panel">
+          <Graph
+            nodes={graph.nodes}
+            relationships={graph.relationships}
+            onNodeClick={(d) => selectEntity(d.id)}
+            selectedId={selectedId}
+          />
+        </main>
 
-      <div className="detail">
-        {selected ? (
-          <EntityPanel entity={selected} />
-        ) : (
-          <div className="empty">Select an entity to explore</div>
-        )}
+        {/* RIGHT */}
+        <aside className="panel right" data-testid="entity-panel">
+          <div className="panel-header">
+            <PanelRight size={14} /> Inspector
+          </div>
+          <div className="panel-scroll">
+            <EntityPanel
+              entity={entity}
+              detail={detail}
+              loading={detailLoading}
+              onSelectLink={selectEntity}
+              onRunAgent={runAgent}
+              runningAgent={runningAgent}
+              agentResult={agentResult}
+            />
+          </div>
+        </aside>
       </div>
     </div>
   );
